@@ -14,7 +14,7 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String sayHello() {
-        return "Hello User!";
+        return "Wellcome to the authentication server!";
     }
 
 }

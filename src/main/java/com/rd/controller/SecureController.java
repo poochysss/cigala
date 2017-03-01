@@ -12,7 +12,7 @@ public class SecureController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String sayHello() {
-        return "Secure Hello!";
+        return "user_secured";
     }
 
 }
