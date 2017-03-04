@@ -1,15 +1,18 @@
-package com.rd.config;
+package com.ppg.config;
 
-import com.rd.security.Authorities;
-import com.rd.security.CustomAuthenticationEntryPoint;
-import com.rd.security.CustomLogoutSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,11 +26,22 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.ppg.security.Authorities;
+import com.ppg.security.CustomAuthenticationEntryPoint;
+import com.ppg.security.CustomLogoutSuccessHandler;
+
 import javax.sql.DataSource;
 
 @Configuration
 public class OAuth2Configuration {
 
+	
+    @Value("classpath:schema.sql")
+    static private Resource schemaScript;
+    
+    @Value("classpath:data.sql")
+   static  private Resource dataScript;
+	
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
@@ -99,19 +113,43 @@ public class OAuth2Configuration {
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients
-                    .inMemory()
-                    .withClient(propertyResolver.getProperty(PROP_CLIENTID))
-                    .scopes("read", "write")
-                    .authorities(Authorities.ROLE_ADMIN.name(), Authorities.ROLE_USER.name())
-                    .authorizedGrantTypes("password", "refresh_token")
-                    .secret(propertyResolver.getProperty(PROP_SECRET))
-                    .accessTokenValiditySeconds(propertyResolver.getProperty(PROP_TOKEN_VALIDITY_SECONDS, Integer.class, 1800));
+//            		.jdbc(dataSource());
+                    .inMemory();
+                    
         }
 
         @Override
         public void setEnvironment(Environment environment) {
             this.propertyResolver = new RelaxedPropertyResolver(environment, ENV_OAUTH);
         }
+        
+        
+        @Bean
+        public DataSourceInitializer dataSourceInitializer(final DataSource dataSource) {
+            final DataSourceInitializer initializer = new DataSourceInitializer();
+            initializer.setDataSource(dataSource);
+            initializer.setDatabasePopulator(databasePopulator());
+            return initializer;
+        }
+
+        private DatabasePopulator databasePopulator() {
+            final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+            populator.addScript(schemaScript);
+            populator.addScript(dataScript);
+            return populator;
+        }
+
+        
+        public DataSource dataSource() {
+            final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            dataSource.setDriverClassName(propertyResolver.getProperty("spring.datasource.dataSourceClassName"));
+            dataSource.setUrl(propertyResolver.getProperty("spring.datasource.url"));
+            dataSource.setUsername(propertyResolver.getProperty("spring.datasource.username"));
+            dataSource.setPassword(propertyResolver.getProperty("spring.datasource.password"));
+            return dataSource;
+        }
+
+
 
     }
 

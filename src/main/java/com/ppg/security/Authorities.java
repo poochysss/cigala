@@ -1,4 +1,4 @@
-package com.rd.security;
+package com.ppg.security;
 
 public enum Authorities {
 

@@ -1,8 +1,9 @@
-package com.rd.repository;
+package com.ppg.repository;
 
 
-import com.rd.domain.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ppg.domain.Authority;
 
 public interface AuthorityRepository extends JpaRepository<Authority, String> {
 }

@@ -1,18 +1,20 @@
-package com.rd.controller;
+package com.ppg.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/secure")
-public class SecureController {
+@RequestMapping("/hello")
+public class HelloWorldController {
+
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String sayHello() {
-        return "user_secured";
+        return "Wellcome to the authentication server!";
     }
 
 }

@@ -1,8 +1,9 @@
-package com.rd.security;
+package com.ppg.security;
 
-import com.rd.domain.Authority;
-import com.rd.domain.User;
-import com.rd.repository.UserRepository;
+import com.ppg.domain.Authority;
+import com.ppg.domain.User;
+import com.ppg.repository.UserRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

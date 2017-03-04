@@ -1,4 +1,4 @@
-package com.rd.domain;
+package com.ppg.domain;
 
 public class Greeting {
 
