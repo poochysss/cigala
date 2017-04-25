@@ -73,6 +73,8 @@ public class OAuth2Configuration {
                     .and()
                     .authorizeRequests()
                     .antMatchers("/hello/").permitAll()
+                    .antMatchers("/user/").permitAll()
+                    .antMatchers("/users/").permitAll()
                     .antMatchers("/secure/**").authenticated();
 
         }
@@ -113,8 +115,15 @@ public class OAuth2Configuration {
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients
-//            		.jdbc(dataSource());
-                    .inMemory();
+            		//.jdbc(dataSource);
+                    .inMemory()
+                    .withClient(propertyResolver.getProperty(PROP_CLIENTID))
+                    .scopes("read", "write")
+                    .authorities(Authorities.ROLE_ADMIN.name(), Authorities.ROLE_USER.name())
+                    .authorizedGrantTypes("password")
+                    .secret(propertyResolver.getProperty(PROP_SECRET));
+//                    .jdbc(dataSource());
+
                     
         }
 

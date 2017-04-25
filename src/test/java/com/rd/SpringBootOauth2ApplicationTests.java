@@ -4,13 +4,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.ppg.SpringBootOauth2Application;
+import com.ppg.Cigala_users;
 
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = SpringBootOauth2Application.class)
+@SpringApplicationConfiguration(classes = Cigala_users.class)
 @WebAppConfiguration
 public class SpringBootOauth2ApplicationTests {
 

@@ -20,7 +20,10 @@ public class UserRepository {
 	@PersistenceContext
 	public EntityManager entityManager;
 	
-	
+	@SuppressWarnings("unchecked")
+	public List<User> findAll() {
+		return entityManager.createQuery("select u from User u").getResultList();
+	}
 	
     @Query
 	public
@@ -52,6 +55,13 @@ public class UserRepository {
 	public
 	boolean createUser(User user) {
 		try {
+			List<?> users = entityManager
+					.createQuery("select a from User a where a.username = :username")
+					.setParameter("username", user.getUsername())
+					.getResultList();
+			if (!users.isEmpty()) {
+				return true;
+			}
 			entityManager.persist(user);
 		} catch (Exception e) {
 			return false;
@@ -60,15 +70,15 @@ public class UserRepository {
 	}
 	
 	@Transactional
-	public boolean deleteUser(String idUser) {
+	public boolean deleteUser(String username) {
 		try {
-			List<?> alarms = entityManager
-					.createQuery("select a from User a where a.idUser = :idUser")
-					.setParameter("idUser", idUser)
+			List<?> users = entityManager
+					.createQuery("select a from User a where a.username = :username")
+					.setParameter("username", username)
 					.getResultList();
-			if (!alarms.isEmpty()) {
-				User alarm = (User) alarms.get(0);
-				entityManager.remove(alarm);
+			if (!users.isEmpty()) {
+				User user = (User) users.get(0);
+				entityManager.remove(user);
 			}
 			return true;
 		} catch (Exception e) {

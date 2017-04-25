@@ -18,7 +18,7 @@ CREATE TABLE user_authority (
     FOREIGN KEY (authority) REFERENCES authority (name),
     UNIQUE INDEX user_authority_idx_1 (username, authority)
 );
-
+q
 CREATE TABLE oauth_access_token (
   token_id VARCHAR(256) DEFAULT NULL,
   token BLOB,
